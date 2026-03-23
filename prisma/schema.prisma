@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  qrCodes QrCode[]
+  folders Folder[]
+  tags    Tag[]
+
+  @@map("users")
+}
+
+model QrCode {
+  id                   String   @id @default(cuid())
+  userId               String   @map("user_id")
+  content              String
+  contentType          String   @default("text") @map("content_type")
+  title                String
+  description          String?
+  qrDataUrl            String   @map("qr_data_url") @db.Text
+  foregroundColor      String   @default("#000000") @map("foreground_color")
+  backgroundColor      String   @default("#FFFFFF") @map("background_color")
+  size                 Int      @default(300)
+  errorCorrectionLevel String   @default("M") @map("error_correction_level")
+  isFavorite           Boolean  @default(false) @map("is_favorite")
+  folderId             String?  @map("folder_id")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  folder Folder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  tags   QrCodeTag[]
+
+  @@index([userId])
+  @@index([folderId])
+  @@map("qr_codes")
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String
+  color     String   @default("#6366f1")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  qrCodes QrCodeTag[]
+
+  @@unique([name, userId])
+  @@index([userId])
+  @@map("tags")
+}
+
+model QrCodeTag {
+  qrCodeId String @map("qr_code_id")
+  tagId    String @map("tag_id")
+
+  qrCode QrCode @relation(fields: [qrCodeId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([qrCodeId, tagId])
+  @@map("qr_code_tags")
+}
+
+model Folder {
+  id        String   @id @default(cuid())
+  name      String
+  userId    String   @map("user_id")
+  parentId  String?  @map("parent_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent   Folder?  @relation("FolderHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children Folder[] @relation("FolderHierarchy")
+  qrCodes  QrCode[]
+
+  @@index([userId])
+  @@index([parentId])
+  @@map("folders")
+}
