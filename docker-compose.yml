@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: qr_generator_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: qruser
+      POSTGRES_PASSWORD: qrpassword
+      POSTGRES_DB: qr_generator
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U qruser -d qr_generator' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    container_name: qr_generator_app
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      DATABASE_URL: postgresql://qruser:qrpassword@db:5432/qr_generator
+      JWT_SECRET: super-secret-jwt-key
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
