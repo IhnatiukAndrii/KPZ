@@ -48,16 +48,18 @@ export default function TagSelector({ availableTags, selectedTagIds, onToggle, o
       </div>
 
       {showCreate && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-          <input value={newTagName} onChange={(e) => setNewTagName(e.target.value)} placeholder="Назва тегу" className="flex-1 bg-transparent text-sm text-slate-200 placeholder:text-slate-500 outline-none" onKeyDown={(e) => e.key === 'Enter' && handleCreate()} />
-          <div className="flex gap-1">
-            {TAG_COLORS.slice(0, 6).map((c) => (
-              <button key={c} onClick={() => setNewTagColor(c)} className={`h-5 w-5 rounded-full border-2 ${newTagColor === c ? 'border-white' : 'border-transparent'}`} style={{ backgroundColor: c }} />
-            ))}
+        <div className="flex flex-col gap-3 p-3 rounded-lg bg-slate-800/50 border border-slate-700/50 mt-2">
+          <input value={newTagName} onChange={(e) => setNewTagName(e.target.value)} placeholder="Назва тегу" className="w-full bg-slate-900/50 px-3 py-2 rounded-md text-sm text-slate-200 placeholder:text-slate-500 outline-none border border-slate-700/50 focus:border-indigo-500" onKeyDown={(e) => e.key === 'Enter' && handleCreate()} />
+          <div className="flex items-center justify-between">
+            <div className="flex flex-wrap gap-1.5">
+              {TAG_COLORS.slice(0, 6).map((c) => (
+                <button key={c} onClick={() => setNewTagColor(c)} className={`h-5 w-5 rounded-full border-2 ${newTagColor === c ? 'border-white' : 'border-transparent'} flex-shrink-0`} style={{ backgroundColor: c }} />
+              ))}
+            </div>
+            <button onClick={handleCreate} disabled={isCreating || !newTagName.trim()} className="text-xs font-medium bg-indigo-600 hover:bg-indigo-700 text-white disabled:bg-slate-700 disabled:text-slate-500 px-3 py-1.5 rounded-md transition-colors flex-shrink-0">
+              {isCreating ? '...' : 'Додати'}
+            </button>
           </div>
-          <button onClick={handleCreate} disabled={isCreating || !newTagName.trim()} className="text-xs text-indigo-400 hover:text-indigo-300 disabled:opacity-50">
-            {isCreating ? '...' : 'Додати'}
-          </button>
         </div>
       )}
     </div>
