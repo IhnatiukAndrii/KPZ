@@ -100,13 +100,13 @@ export default function QrForm({
     <div className="space-y-6">
       <div>
         <label className="block text-sm font-medium text-slate-300 mb-2">Тип вмісту</label>
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+        <div className="flex flex-wrap gap-2">
           {QR_CONTENT_TYPES.map((type) => (
             <button
               key={type.value}
               onClick={() => updateField('contentType', type.value as QrContentType)}
               className={`
-                rounded-lg px-3 py-2 text-xs font-medium transition-all
+                rounded-lg px-3 py-2 text-sm font-medium transition-all whitespace-nowrap flex-1 text-center min-w-[max-content]
                 ${formData.contentType === type.value
                   ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
                   : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700 hover:text-slate-200'
