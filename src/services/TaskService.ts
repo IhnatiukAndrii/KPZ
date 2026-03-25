@@ -1,11 +1,11 @@
 import { Task, TaskStatus } from '../models/Task';
-import { StorageService } from './StorageService';
+import { IStorageService } from './StorageService';
 import * as crypto from 'crypto';
 
 export class TaskService {
   private tasks: Task[];
 
-  constructor(private storageService: StorageService) {
+  constructor(private storageService: IStorageService) {
     this.tasks = this.storageService.readData();
   }
 
