@@ -1,9 +1,6 @@
-# Завдання 5: Компонувальник (Composite)
+# Завдання 5: Стратегія (Strategy)
 
-Цей проєкт демонструє використання патерну **Composite** для створення деревовидної структури власної мови розмітки (`LightHTML`).
-Абстрактний клас `LightNode` об'єднує компоненти двох типів:
-- `LightTextNode` (листок, що містить лише текст).
-- `LightElementNode` (композит, що містить інші вузли, теги та стилі).
+Цей проєкт демонструє використання патерну **Strategy** для побудови та управління HTML-елементами. Реалізовано дерево елементів (Composite), систему подій (Observer) та стратегію завантаження зображень (Strategy).
 
 ## Як запустити
 Для запуску скрипта перейдіть у каталог завдання та виконайте:
@@ -25,4 +22,15 @@ npm start
 
 --- Child node count (root ul) ---
 4
+
+--- Simulating Events ---
+Mouse hovered over the list!
+List was clicked!
+Item "Bread" was clicked!
+
+--- Testing Image Loading Strategy ---
+Loading image from network: https://example.com/logo.png
+Loading image from file system: /assets/local-image.jpg
+<img src="https://example.com/logo.png" />
+<img src="/assets/local-image.jpg" />
 ```
