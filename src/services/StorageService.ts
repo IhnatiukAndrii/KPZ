@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Task } from '../models/Task';
+import { Logger } from '../utils/Logger';
 
 export interface IStorageService {
   readData(): Task[];
@@ -30,7 +31,8 @@ export class StorageService implements IStorageService {
         createdAt: new Date(item.createdAt),
         updatedAt: new Date(item.updatedAt)
       }));
-    } catch {
+    } catch (error: any) {
+      Logger.error(`Помилка читання або парсингу файлу: ${error.message}`);
       return [];
     }
   }
