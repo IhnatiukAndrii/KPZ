@@ -2,6 +2,15 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Task } from '../models/Task';
 
+interface RawTask {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export class StorageService {
   private readonly filePath: string;
 
@@ -19,9 +28,12 @@ export class StorageService {
   public readData(): Task[] {
     try {
       const data = fs.readFileSync(this.filePath, 'utf-8');
-      const parsed = JSON.parse(data);
-      return parsed.map((item: any) => ({
-        ...item,
+      const parsed = JSON.parse(data) as RawTask[];
+      return parsed.map((item) => ({
+        id: item.id,
+        title: item.title,
+        description: item.description,
+        status: item.status as any,
         createdAt: new Date(item.createdAt),
         updatedAt: new Date(item.updatedAt)
       }));
