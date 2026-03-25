@@ -6,6 +6,7 @@ export class LightElementNode extends LightNode {
     private closingType: "single" | "paired";
     private cssClasses: string[];
     private children: LightNode[];
+    private eventListeners: Map<string, Array<() => void>>;
     
     constructor(tagName: string, displayType: "block" | "inline", closingType: "single" | "paired", cssClasses: string[] = []) {
         super();
@@ -14,6 +15,32 @@ export class LightElementNode extends LightNode {
         this.closingType = closingType;
         this.cssClasses = cssClasses;
         this.children = [];
+        this.eventListeners = new Map();
+    }
+    
+    public addEventListener(eventType: string, listener: () => void): void {
+        const listeners = this.eventListeners.get(eventType);
+        if (listeners) {
+            listeners.push(listener);
+        } else {
+            this.eventListeners.set(eventType, [listener]);
+        }
+    }
+
+    public removeEventListener(eventType: string, listener: () => void): void {
+        const listeners = this.eventListeners.get(eventType);
+        if (listeners) {
+            this.eventListeners.set(eventType, listeners.filter(l => l !== listener));
+        }
+    }
+
+    public dispatchEvent(eventType: string): void {
+        const listeners = this.eventListeners.get(eventType);
+        if (listeners) {
+            for (const listener of listeners) {
+                listener();
+            }
+        }
     }
     
     public addChild(child: LightNode): void {
