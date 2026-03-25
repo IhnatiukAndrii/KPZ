@@ -1,5 +1,6 @@
 import { LightElementNode } from './LightElementNode';
 import { LightTextNode } from './LightTextNode';
+import { ImageNode } from './ImageNode';
 
 function main() {
     const list = new LightElementNode("ul", "block", "paired", ["product-list", "mt-4"]);
@@ -34,9 +35,20 @@ function main() {
     list.dispatchEvent("mouseover");
     list.dispatchEvent("click");
     
+    
     if (listItems.length > 0) {
         listItems[0].dispatchEvent("click");
     }
+
+    console.log("\n--- Testing Image Loading Strategy ---");
+    const networkImg = new ImageNode("https://example.com/logo.png");
+    const localImg = new ImageNode("/assets/local-image.jpg");
+
+    networkImg.load();
+    localImg.load();
+
+    console.log(networkImg.outerHTML());
+    console.log(localImg.outerHTML());
 }
 
 main();
