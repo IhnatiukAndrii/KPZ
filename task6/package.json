@@ -1,0 +1,12 @@
+{
+  "name": "task6",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "tsc && node --expose-gc dist/index.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.37",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
