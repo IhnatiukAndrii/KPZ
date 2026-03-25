@@ -2,7 +2,12 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Task } from '../models/Task';
 
-export class StorageService {
+export interface IStorageService {
+  readData(): Task[];
+  writeData(data: Task[]): void;
+}
+
+export class StorageService implements IStorageService {
   private readonly filePath: string;
 
   constructor(filename: string) {
